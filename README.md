@@ -24,7 +24,7 @@ pip install lmdb Pillow
 ---
 
 ### Reading from a Database
-The [```Database```](database.py#L14) class mimics Python's ```dict``` structure, with the exception that is read-only.
+The [```Database```](database.py#L32) class mimics Python's ```dict``` structure, with the exception that is read-only.
 
 ```python
 from database import Database
@@ -83,7 +83,7 @@ values = database[keys]  # <- This is a list of PIL.Image.
 
 #### Important!
 
-If you have specific needs in terms of I/O, you only have to sub-class [```_fdecode()```](database.py#L166), its behaviour should mimic behaviour opening a regular file, excepted that this one is binary.
+If you have specific needs in terms of I/O, you only have to sub-class [```_fdecode()```](database.py#L135), its behaviour should mimic behaviour opening a regular file, excepted that this one is binary.
 
 ---
 
