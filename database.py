@@ -78,7 +78,7 @@ class Database(object):
         :return: The pickle protocol.
         """
         if self._protocol is None:
-            self._protocol = self._fetch(
+            self._protocol = self._get(
                 key="protocol",
                 fencode=_ascii_encode,
                 fdecode=_pickle_decode,
@@ -93,7 +93,7 @@ class Database(object):
         :return: The set of available keys.
         """
         protocol = self.protocol
-        keys = self._fetch(
+        keys = self._get(
             key="keys",
             fencode=lambda key: _pickle_encode(key, protocol=protocol),
             fdecode=_pickle_decode,
@@ -117,22 +117,22 @@ class Database(object):
         :param item: A key or a list of keys.
         :return: A value or a list of values.
         """
+        self._has_fetched = True
         if not isinstance(item, list):
-            item = self._fetch(
+            item = self._get(
                 key=item,
                 fencode=self._fencode,
                 fdecode=self._fdecode,
             )
         else:
-            item = self._fetchs(
+            item = self._gets(
                 keys=item,
                 fencodes=self._fencodes,
                 fdecodes=self._fdecodes,
             )
-        self._has_fetched = True
         return item
 
-    def _fetch(self, key, fencode, fdecode):
+    def _get(self, key, fencode, fdecode):
         """
         Instantiates a transaction and its associated cursor to fetch an item.
 
@@ -149,7 +149,7 @@ class Database(object):
         self._keep_database()
         return value
 
-    def _fetchs(self, keys, fencodes, fdecodes):
+    def _gets(self, keys, fencodes, fdecodes):
         """
         Instantiates a transaction and its associated cursor to fetch a list of items.
 
@@ -245,7 +245,7 @@ class ArrayDatabase(Database):
     def dtype(self):
         if self._dtype is None:
             protocol = self.protocol
-            self._dtype = self._fetch(
+            self._dtype = self._get(
                 key="dtype",
                 fencode=lambda key: _pickle_encode(key, protocol=protocol),
                 fdecode=_pickle_decode,
@@ -256,7 +256,7 @@ class ArrayDatabase(Database):
     def shape(self):
         if self._shape is None:
             protocol = self.protocol
-            self._shape = self._fetch(
+            self._shape = self._get(
                 key="shape",
                 fencode=lambda key: _pickle_encode(key, protocol=protocol),
                 fdecode=_pickle_decode,
